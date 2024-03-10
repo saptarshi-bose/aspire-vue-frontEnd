@@ -1,6 +1,6 @@
 <template>
     <div style="padding: 2% 12% 0% 12%; height: 100%;">
-        <q-btn flat icon="visibility" rounded color="primary" label="Show Card Details" @click="showNumberClick()" style="font-weight: 800;" />
+        <q-btn flat :icon="showNumber?'visibility_off' : 'visibility' " rounded color="primary" :label="showNumber?'Hide Card Details': 'Show Card Details' " @click="showNumberClick()" style="font-weight: 800; font-size: 12px;" size="small" />
         <q-carousel-slide style="min-height: max-content;">
             <q-card class="bg-primary text-white" style="aspect-ratio: 16 / 9;border-radius: 12px;" :style="{opacity : freezeStatus? '0.5': '1'}">
                 <q-card-media overlay-position="full">
@@ -62,7 +62,6 @@ export default defineComponent({
     showNumberClick(){
         if(this.freezeStatus) return;
         this.showNumber = !this.showNumber;
-        console.log(this.showNumber, this.freezeStatus)
     }
   }
 });

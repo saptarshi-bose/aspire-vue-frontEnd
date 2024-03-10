@@ -68,12 +68,12 @@
                     style="border-radius: 8px; background-color: #F5F9FF;"
                     default-opened
                   >
-                    <q-card>
-                      <q-card-section>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, eius reprehenderit eos corrupti
-                        commodi magni quaerat ex numquam, dolorum officiis modi facere maiores architecto suscipit iste
-                        eveniet doloribus ullam aliquid.
+                    <transactionComponent v-for="(transaction,index) in transactions" :logo="transaction.logo" :amount="transaction.amount" :date="transaction.date" :remarks="transaction.remarks" :transaction-name="transaction.transactionName" :bg-color="transaction.bgColor" v-bind:key="index" ></transactionComponent>
+                    <q-card class="my-card">
+                      <q-card-section  style="display: flex; justify-content: center; background-color: #EDFFF5;">
+                        <q-btn flat color="primary" label="View All Card Transactions"></q-btn>
                       </q-card-section>
+                      <q-separator />
                     </q-card>
                   </q-expansion-item>
                 </div>
@@ -86,9 +86,10 @@
 </template>
 
 <script lang="ts">
-import { Ref, ref } from 'vue'
+import { ref } from 'vue'
 import cardComponent  from 'components/CardComponent.vue'
 import actionComponent  from 'components/ActionComponent.vue'
+import transactionComponent  from 'components/TransactionComponent.vue'
 import { useQuasar } from 'quasar'
 import { Card } from 'src/components/models'
 let localCard = localStorage.getItem('cards');
@@ -103,7 +104,7 @@ export default {
           cardNumber: '2123234312332020',
           cvv: '456',
           expiry:'12/20',
-          freezeStatus: true
+          freezeStatus: false
         },
         {
           id: 1,
@@ -111,11 +112,44 @@ export default {
           cardNumber: '5463223572334567',
           cvv: '456',
           expiry: '12/20',
-          freezeStatus: false
+          freezeStatus: true
         }
       ]);
       if(localCard) cards.value = JSON.parse(localCard) as Array<Card>;
-        console.log(cards.value)
+    const transactions = [
+        {
+          transactionName:'Hamleys',
+          date: '20 May 2020',
+          remarks:'refund on debit card',
+          logo:'inventory_2',
+          amount:'1.25',
+          bgColor: '#009DFF1A'
+        },
+        {
+          transactionName:'Hamleys',
+          date: '20 May 2020',
+          remarks:'charged to debit card',
+          logo:'flight',
+          amount:'-11.25',
+          bgColor: '#00D6B51A'
+        },
+        {
+          transactionName:'Hamleys',
+          date: '20 May 2020',
+          remarks:'charged to debit card',
+          logo:'campaign',
+          amount:'3.25',
+          bgColor: '#F251951A'
+        },
+        {
+          transactionName:'Hamleys',
+          date: '20 May 2020',
+          remarks:'charged to debit card',
+          logo:'inventory_2',
+          amount:'-2.25',
+          bgColor: '#009DFF1A'
+        },
+      ];
     return {
       showNotif(message: string){
         $q.notify(message)
@@ -152,43 +186,7 @@ export default {
         }
       ],
       cards,
-      transactions:[
-        {
-          transactionName:'Hamleys',
-          date: '20 May 2020',
-          remarks:'refund on debit card',
-          logo:'',
-          amount:'$1.25'
-        },
-        {
-          transactionName:'Hamleys',
-          date: '20 May 2020',
-          remarks:'refund on debit card',
-          logo:'',
-          amount:'$1.25'
-        },
-        {
-          transactionName:'Hamleys',
-          date: '20 May 2020',
-          remarks:'refund on debit card',
-          logo:'',
-          amount:'$1.25'
-        },
-        {
-          transactionName:'Hamleys',
-          date: '20 May 2020',
-          remarks:'refund on debit card',
-          logo:'',
-          amount:'$1.25'
-        },
-        {
-          transactionName:'Hamleys',
-          date: '20 May 2020',
-          remarks:'refund on debit card',
-          logo:'',
-          amount:'$1.25'
-        }
-      ],
+      transactions,
       prompt () {
         $q.dialog({
           title: 'Add a New Card',
@@ -209,7 +207,7 @@ export default {
             expiry: '12/22',
             freezeStatus: false
           });
-          localStorage.setItem("cards", JSON.stringify(cards.value));
+          localStorage.setItem('cards', JSON.stringify(cards.value));
         })
       },
     }
@@ -220,7 +218,7 @@ export default {
         this.cards.forEach((card) => {
           if(card.id == this.selectedCard) card.freezeStatus = !card.freezeStatus
         });
-        localStorage.setItem("cards", JSON.stringify(this.cards));
+        localStorage.setItem('cards', JSON.stringify(this.cards));
         this.showNotif('Card Freeze status changed')
       }
       else this.showNotif(handler + ' clicked')
@@ -229,43 +227,9 @@ export default {
   components:{
     cardComponent,
     actionComponent,
+    transactionComponent
   }
 }
-// import { Todo, Meta } from 'components/models';
-// import { defineComponent, ref } from 'vue';
-
-// export default defineComponent({
-//   name: 'IndexPage',
-//   components: { ExampleComponent },
-//   setup () {
-//     const todos = ref<Todo[]>([
-//       {
-//         id: 1,
-//         content: 'ct1'
-//       },
-//       {
-//         id: 2,
-//         content: 'ct2'
-//       },
-//       {
-//         id: 3,
-//         content: 'ct3'
-//       },
-//       {
-//         id: 4,
-//         content: 'ct4'
-//       },
-//       {
-//         id: 5,
-//         content: 'ct5'
-//       }
-//     ]);
-//     const meta = ref<Meta>({
-//       totalCount: 1200
-//     });
-//     return { todos, meta };
-//   }
-// });
 </script>
 <style lang="scss">
 .card-main{
